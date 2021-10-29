@@ -1,11 +1,11 @@
 import re
-
+from collections import Counter
 file1 = open('/home/anthony/Documents/code/py/powershellAnyl/pow.ps1', 'r')
 Lines = file1.readlines()
 foundUrls= []
-
-count = 0
-
+totalTicks=0
+count = Counter(Lines)
+#print(count['a'])
 def urls(linetoParse):
     linetoParse=linetoParse.replace('`','')
     linetoParse=linetoParse.replace('\'','')
@@ -23,8 +23,10 @@ def urls(linetoParse):
 
 
 
+#print(len(re.findall(file1, '1')))
 for line in Lines:
     #if "$" in line.strip():
+    totalTicks=totalTicks+ len(re.findall('`',line))
     if (line.startswith("$")):
         urls(line)
         result = re.search('=(.*)',line)
@@ -39,4 +41,8 @@ for line in Lines:
 
     #count += 1
     #print(line.strip())
-print(foundUrls)
+print("<-----URLS DETECTED----->")
+for x in foundUrls:
+    print(x)
+print("<------TOTAL TICKS------>")
+print(totalTicks)
