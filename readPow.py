@@ -2,8 +2,8 @@ import re
 file1 = open('/home/anthony/Documents/code/py/powershellAnyl/pow.ps1', 'r')
 Lines = file1.readlines()
 foundUrls= []
+foundVaribleRef=[]
 totalTicks=0
-
 
 def urls(linetoParse):
     linetoParse=linetoParse.replace('`','')
@@ -19,11 +19,18 @@ def urls(linetoParse):
 
 for line in Lines:
     totalTicks=totalTicks+ len(re.findall('`',line))
+    line=line.replace('`','')
     if (line.startswith("$")):
         urls(line)
-        result = re.search('=(.*)',line)
+        varibleResult=result = re.search('\$(.*)',line)
+        if varibleResult:
+            foundVaribleRef.append(line)
+        #print(result.group(0))
 print("<-----URLS DETECTED----->")
 for x in foundUrls:
     print(x)
 print("<------TOTAL TICKS------>")
 print(totalTicks)
+print("<--Varible Declaration-->")
+for x in foundVaribleRef:
+    print(x)
