@@ -22,10 +22,6 @@ for line in Lines:
     if (line.startswith("$")):
         urls(line)
         result = re.search('=(.*)',line)
-        try:
-            f=0
-        except:
-            continue
 print("<-----URLS DETECTED----->")
 for x in foundUrls:
     print(x)
