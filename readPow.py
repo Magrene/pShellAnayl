@@ -1,5 +1,6 @@
-import re
-file1 = open('/home/anthony/Documents/code/py/powershellAnyl/pow.ps1', 'r')
+import re , sys
+file1 = open('/home/anthony/Documents/code/py/powershellAnyl/' + sys.argv[1] , 'r')
+print(sys.argv[0])
 Lines = file1.readlines()
 foundUrls= []
 foundVaribleRef=[]
