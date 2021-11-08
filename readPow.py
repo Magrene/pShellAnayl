@@ -22,15 +22,18 @@ for line in Lines:
     line=line.replace('`','')
     if (line.startswith("$")):
         urls(line)
-        varibleResult=result = re.search('\$(.*)',line)
+        varibleResult=re.search('\$(.*)=',line)
+        
         if varibleResult:
-            foundVaribleRef.append(line)
+            if varibleResult.group(1) not in foundVaribleRef:
+                foundVaribleRef.append(varibleResult.group(1))
         #print(result.group(0))
 print("<-----URLS DETECTED----->")
 for x in foundUrls:
     print(x)
+
 print("<------TOTAL TICKS------>")
 print(totalTicks)
-print("<--Varible Declaration-->")
+print("<----Found Varibles----->")
 for x in foundVaribleRef:
     print(x)
