@@ -5,6 +5,16 @@ Lines = file1.readlines()
 foundUrls= []
 foundVaribleRef=[]
 totalTicks=0
+def findVarible(line):
+    global foundVaribleRef
+    if (line.startswith("$")):
+        urls(line)
+        varibleResult=re.search('\$(.*)=',line)
+        
+        if varibleResult:
+            if varibleResult.group(1) not in foundVaribleRef:
+                foundVaribleRef.append(varibleResult.group(1))
+        #print(result.group(0))
 
 def urls(linetoParse):
     linetoParse=linetoParse.replace('`','')
@@ -18,17 +28,22 @@ def urls(linetoParse):
     if resultHTTPS:
         foundUrls.append(resultHTTPS.group(0))
 
-for line in Lines:
-    totalTicks=totalTicks+ len(re.findall('`',line))
-    line=line.replace('`','')
-    if (line.startswith("$")):
+def getRefRe(line,reSrch):
+    line=re.search(reSrch+'(.*)',line)
+    if line:
+        return line.group(0)
+
+def loopEachLine(Lines):
+    global totalTicks
+    for line in Lines:
+        totalTicks=totalTicks+ len(re.findall('`',line))
+        line=line.replace('`','')
+        findVarible(line)
         urls(line)
-        varibleResult=re.search('\$(.*)=',line)
+    
+loopEachLine(Lines)
         
-        if varibleResult:
-            if varibleResult.group(1) not in foundVaribleRef:
-                foundVaribleRef.append(varibleResult.group(1))
-        #print(result.group(0))
+
 print("<-----URLS DETECTED----->")
 for x in foundUrls:
     print(x)
@@ -36,5 +51,8 @@ for x in foundUrls:
 print("<------TOTAL TICKS------>")
 print(totalTicks)
 print("<----Found Varibles----->")
+for x in foundVaribleRef:
+    print(x)
+print("<----Varible Values----->")
 for x in foundVaribleRef:
     print(x)
