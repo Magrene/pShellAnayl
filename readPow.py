@@ -28,6 +28,13 @@ def urls(linetoParse):
     if resultHTTPS:
         foundUrls.append(resultHTTPS.group(0))
 
+def getVarRef(reSrch):
+    for line in Lines:
+        result=re.search(reSrch+'(.*)',line)
+        if result:
+            return line
+        
+
 def getRefRe(line,reSrch):
     line=re.search(reSrch+'(.*)',line)
     if line:
@@ -42,7 +49,7 @@ def loopEachLine(Lines):
         urls(line)
     
 loopEachLine(Lines)
-        
+       
 
 print("<-----URLS DETECTED----->")
 for x in foundUrls:
@@ -53,6 +60,7 @@ print(totalTicks)
 print("<----Found Varibles----->")
 for x in foundVaribleRef:
     print(x)
-print("<----Varible Values----->")
+print("<---Inital Declaration-->")
 for x in foundVaribleRef:
     print(x)
+    print(getVarRef(x))
