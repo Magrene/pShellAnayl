@@ -21,8 +21,10 @@ def urls(linetoParse):
     linetoParse=linetoParse.replace('\'','')
     linetoParse=linetoParse.replace('"','')
     global foundUrls
-    resultHTTP = re.search('http(.*)',linetoParse)
-    resultHTTPS = re.search('https(.*)',linetoParse)
+    
+    
+    resultHTTP = getRefRe(linetoParse,"http")
+    resultHTTPS = getRefRe(linetoParse,"https")
     if resultHTTP or resultHTTPS:
         foundUrls.append(resultHTTP.group(0))
     if resultHTTPS:
@@ -30,20 +32,20 @@ def urls(linetoParse):
 
 def getVarRef(reSrch):
     for line in Lines:
-        result=re.search(reSrch+'(.*)',line)
+        result=getRefReEnd(line,reSrch,"=")
         if result:
             return line
         
 
 def getRefRe(line,reSrch):
-    line=re.search(reSrch+'(.*)',line)
-    if line:
-        return line.group(0)
+    result=re.search(reSrch+'(.*)',line)
+    if result:
+        return result
 
-def getRefReEnd(line,reSrch,reSrchENd):
-    line=re.search(reSrch+'(.*)',line)
+def getRefReEnd(line,reSrch,reSrchEnd):
+    line=re.search(reSrch+'(.*)'+reSrchEnd,line)
     if line:
-        return line.group(0)
+        return line
 
 def loopEachLine(Lines):
     global totalTicks
@@ -68,4 +70,4 @@ for x in foundVaribleRef:
 print("<---Inital Declaration-->")
 for x in foundVaribleRef:
     print(x)
-    print(getVarRef(x))
+    print(str(getVarRef(x)))
