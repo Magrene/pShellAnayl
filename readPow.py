@@ -9,8 +9,8 @@ def findVarible(line):
     global foundVaribleRef
     if (line.startswith("$")):
         urls(line)
-        varibleResult=re.search('\$(.*)=',line)
-        
+        #svaribleResult=re.search('\$(.*)=',line)
+        varibleResult=getRefReEnd(line,"\$","=")
         if varibleResult:
             if varibleResult.group(1) not in foundVaribleRef:
                 foundVaribleRef.append(varibleResult.group(1))
@@ -36,6 +36,11 @@ def getVarRef(reSrch):
         
 
 def getRefRe(line,reSrch):
+    line=re.search(reSrch+'(.*)',line)
+    if line:
+        return line.group(0)
+
+def getRefReEnd(line,reSrch,reSrchENd):
     line=re.search(reSrch+'(.*)',line)
     if line:
         return line.group(0)
