@@ -9,22 +9,20 @@ def findVarible(line):
     global foundVaribleRef
     if (line.startswith("$")):
         urls(line)
-        #svaribleResult=re.search('\$(.*)=',line)
         varibleResult=getRefReEnd(line,"\$","=")
         if varibleResult:
             if varibleResult.group(1) not in foundVaribleRef:
                 foundVaribleRef.append(varibleResult.group(1))
-        #print(result.group(0))
+
 
 def urls(linetoParse):
+    global foundUrlsa
     linetoParse=linetoParse.replace('`','')
     linetoParse=linetoParse.replace('\'','')
     linetoParse=linetoParse.replace('"','')
-    global foundUrls
-    
-    
     resultHTTP = getRefRe(linetoParse,"http")
     resultHTTPS = getRefRe(linetoParse,"https")
+    
     if resultHTTP or resultHTTPS:
         foundUrls.append(resultHTTP.group(0))
     if resultHTTPS:
