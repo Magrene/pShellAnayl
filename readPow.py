@@ -4,16 +4,21 @@ print(sys.argv[0])
 Lines = file1.readlines()
 foundUrls= []
 foundVaribleRef=[]
+foundFunctions=[]
 totalTicks=0
 def findVarible(line):
     global foundVaribleRef
     if (line.startswith("$")):
-        urls(line)
+        
         varibleResult=getRefReEnd(line,"\$","=")
         if varibleResult:
             if varibleResult.group(1) not in foundVaribleRef:
                 foundVaribleRef.append(varibleResult.group(1))
-
+def findFunctions(linetoParse):
+    global foundFunctionNames
+    funResult=getRefReEnd(linetoParse,"function","{")
+    if funResult:
+        foundFunctions.append(funResult.group(1))
 
 def urls(linetoParse):
     global foundUrlsa
@@ -52,20 +57,25 @@ def loopEachLine(Lines):
         line=line.replace('`','')
         findVarible(line)
         urls(line)
+        findFunctions(line)
+
     
 loopEachLine(Lines)
-       
 
-print("<-----URLS DETECTED----->")
+
+print("\n<-----URLS DETECTED----->")
 for x in foundUrls:
     print(x)
 
-print("<------TOTAL TICKS------>")
+print("\n<------TOTAL TICKS------>")
 print(totalTicks)
-print("<----Found Varibles----->")
+print("<----FOUND FUNCTIONS---->")
+for x in foundFunctions:
+    print(x)
+print("\n<----Found Varibles----->")
 for x in foundVaribleRef:
     print(x)
-print("<---Inital Declaration-->")
+print("\n<---Inital Declaration-->")
 for x in foundVaribleRef:
     print(x)
     print(str(getVarRef(x)))
