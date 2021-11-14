@@ -59,9 +59,7 @@ def loopEachLine(Lines):
         urls(line)
         findFunctions(line)
 
-    
 loopEachLine(Lines)
-
 
 print("\n<-----URLS DETECTED----->")
 for x in foundUrls:
