@@ -9,7 +9,6 @@ totalTicks=0
 def findVarible(line):
     global foundVaribleRef
     if (line.startswith("$")):
-        
         varibleResult=getRefReEnd(line,"\$","=")
         if varibleResult:
             if varibleResult.group(1) not in foundVaribleRef:
