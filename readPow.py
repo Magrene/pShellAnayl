@@ -6,13 +6,14 @@ foundUrls= []
 foundVaribleRef=[]
 foundFunctions=[]
 totalTicks=0
+antiVirusDetect=False
+antiVirusDetectLine=[]
 def findVarible(line):
     global foundVaribleRef
     if (line.startswith("$")):
         varibleResult=getRefReEnd(line,"\$","=")
-        if varibleResult:
-            if varibleResult.group(1) not in foundVaribleRef:
-                foundVaribleRef.append(varibleResult.group(1))
+        if varibleResult and varibleResult.group(1) not in foundVaribleRef:
+            foundVaribleRef.append(varibleResult.group(1))
 def findFunctions(linetoParse):
     global foundFunctionNames
     funResult=getRefReEnd(linetoParse,"function","{")
@@ -20,7 +21,6 @@ def findFunctions(linetoParse):
         foundFunctions.append(funResult.group(1))
 
 def urls(linetoParse):
-    global foundUrlsa
     linetoParse=linetoParse.replace('`','')
     linetoParse=linetoParse.replace('\'','')
     linetoParse=linetoParse.replace('"','')
@@ -48,6 +48,11 @@ def getRefReEnd(line,reSrch,reSrchEnd):
     line=re.search(reSrch+'(.*)'+reSrchEnd,line)
     if line:
         return line
+def antiVirusDetection(line):
+    global antiVirusDetect ,antiVirusDetectLine
+    if getRefRe(line,"AntiVirusProduct"):
+        antiVirusDetect=True
+        antiVirusDetectLine.append(line)
 
 def loopEachLine(Lines):
     global totalTicks
@@ -57,6 +62,7 @@ def loopEachLine(Lines):
         findVarible(line)
         urls(line)
         findFunctions(line)
+        antiVirusDetection(line)
 
 loopEachLine(Lines)
 
@@ -72,7 +78,13 @@ for x in foundFunctions:
 print("\n<----Found Varibles----->")
 for x in foundVaribleRef:
     print(x)
-print("\n<---Inital Declaration-->")
+print("\n<---Initial Declaration-->")
 for x in foundVaribleRef:
     print(x)
     print(str(getVarRef(x)))
+print("\n<--Anti Virus Detection-->")
+print(antiVirusDetect)
+if antiVirusDetect:
+    print("\n  <--Offending  Lines-->")
+    for x in antiVirusDetectLine:
+        print(" ",x)
