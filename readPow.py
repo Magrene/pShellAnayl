@@ -8,6 +8,35 @@ foundFunctions=[]
 totalTicks=0
 antiVirusDetect=False
 antiVirusDetectLine=[]
+webReq=[]
+restMeth=[]
+
+def revokeObfuscation(line):
+        line=(((line.replace('`','')).lstrip())).rstrip()
+        return line
+
+def getVarRef(reSrch):
+    for line in Lines:
+        result=getRefReEnd(line,reSrch,"=")
+        if result:
+            return revokeObfuscation(line.lower())
+        
+
+def getRefRe(line,reSrch):
+    result=re.search(reSrch+'(.*)',line)
+    if result:
+        return result
+
+
+
+def callsToWeb(line):
+    result=getRefRe(revokeObfuscation(line),"invoke-web")
+    if result:
+        webReq.append(line)
+    result=getRefRe(revokeObfuscation(line),"invoke-rest")
+    if result:
+        restMeth.append(line)
+
 def findVarible(line):
     global foundVaribleRef
     if (line.startswith("$")):
@@ -21,7 +50,7 @@ def findFunctions(linetoParse):
         foundFunctions.append(funResult.group(1))
 
 def urls(linetoParse):
-    linetoParse=linetoParse.replace('`','')
+
     linetoParse=linetoParse.replace('\'','')
     linetoParse=linetoParse.replace('"','')
     resultHTTP = getRefRe(linetoParse,"http")
@@ -32,17 +61,7 @@ def urls(linetoParse):
     if resultHTTPS:
         foundUrls.append(resultHTTPS.group(0))
 
-def getVarRef(reSrch):
-    for line in Lines:
-        result=getRefReEnd(line,reSrch,"=")
-        if result:
-            return line
-        
 
-def getRefRe(line,reSrch):
-    result=re.search(reSrch+'(.*)',line)
-    if result:
-        return result
 
 def getRefReEnd(line,reSrch,reSrchEnd):
     line=re.search(reSrch+'(.*)'+reSrchEnd,line)
@@ -63,6 +82,7 @@ def loopEachLine(Lines):
         urls(line)
         findFunctions(line)
         antiVirusDetection(line)
+        callsToWeb(line)
 
 loopEachLine(Lines)
 
@@ -82,6 +102,11 @@ print("\n<---Initial Declaration-->")
 for x in foundVaribleRef:
     print(x)
     print(str(getVarRef(x)))
+print("\n<------Web Requests------>")
+for x in webReq:
+    print(x)
+for x in restMeth:
+    print(x)
 print("\n<--Anti Virus Detection-->")
 print(antiVirusDetect)
 if antiVirusDetect:
