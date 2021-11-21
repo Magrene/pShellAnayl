@@ -10,7 +10,13 @@ antiVirusDetect=False
 antiVirusDetectLine=[]
 webReq=[]
 restMeth=[]
+regCalls=[]
+schTaskCalls=[]
 
+def getRefReEnd(line,reSrch,reSrchEnd):
+    line=re.search(reSrch+'(.*)'+reSrchEnd,line)
+    if line:
+        return line
 def revokeObfuscation(line):
         line=(((line.replace('`','')).lstrip())).rstrip()
         return line
@@ -27,7 +33,14 @@ def getRefRe(line,reSrch):
     if result:
         return result
 
-
+def detectPersistence(line):
+    global regCalls, schTaskCalls
+    result=getRefRe(revokeObfuscation(line),"New-Item")
+    if result:
+        regCalls.append(line)
+    if getRefRe(revokeObfuscation(line),"new-scheduledtaskaction") or getRefRe(revokeObfuscation(line),"new-scheduledtaskaction"):
+        regCalls.append(line)
+    
 
 def callsToWeb(line):
     result=getRefRe(revokeObfuscation(line),"invoke-web")
@@ -63,10 +76,7 @@ def urls(linetoParse):
 
 
 
-def getRefReEnd(line,reSrch,reSrchEnd):
-    line=re.search(reSrch+'(.*)'+reSrchEnd,line)
-    if line:
-        return line
+
 def antiVirusDetection(line):
     global antiVirusDetect ,antiVirusDetectLine
     if getRefRe(line,"AntiVirusProduct"):
@@ -83,6 +93,7 @@ def loopEachLine(Lines):
         findFunctions(line)
         antiVirusDetection(line)
         callsToWeb(line)
+        detectPersistence(line)
 
 loopEachLine(Lines)
 
@@ -113,3 +124,8 @@ if antiVirusDetect:
     print("\n  <--Offending  Lines-->")
     for x in antiVirusDetectLine:
         print(" ",x)
+print('\n<--Persistence  Detection-->"')
+for x in schTaskCalls:
+    print(x)
+for x in regCalls:
+    print(x)
