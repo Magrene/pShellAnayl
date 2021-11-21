@@ -43,11 +43,9 @@ def detectPersistence(line):
     
 
 def callsToWeb(line):
-    result=getRefRe(revokeObfuscation(line),"invoke-web")
-    if result:
+    if getRefRe(revokeObfuscation(line),"invoke-web"):
         webReq.append(line)
-    result=getRefRe(revokeObfuscation(line),"invoke-rest")
-    if result:
+    if getRefRe(revokeObfuscation(line),"invoke-web"):
         restMeth.append(line)
 
 def findVarible(line):
