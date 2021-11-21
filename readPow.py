@@ -72,9 +72,6 @@ def urls(linetoParse):
     if resultHTTPS:
         foundUrls.append(resultHTTPS.group(0))
 
-
-
-
 def antiVirusDetection(line):
     global antiVirusDetect ,antiVirusDetectLine
     if getRefRe(line,"AntiVirusProduct"):
