@@ -12,6 +12,7 @@ webReq=[]
 restMeth=[]
 regCalls=[]
 schTaskCalls=[]
+shellCalls=[]
 
 def getRefReEnd(line,reSrch,reSrchEnd):
     line=re.search(reSrch+'(.*)'+reSrchEnd,line)
@@ -32,7 +33,11 @@ def getRefRe(line,reSrch):
     result=re.search(reSrch+'(.*)',line)
     if result:
         return result
-
+def detectShellCalls(line):
+    global shellCalls
+    if getRefRe(revokeObfuscation(line),"cmd") or getRefRe(revokeObfuscation(line),"powershell"):
+        shellCalls.append(line)
+    
 def detectPersistence(line):
     global regCalls, schTaskCalls
     result=getRefRe(revokeObfuscation(line),"New-Item")
@@ -71,6 +76,9 @@ def urls(linetoParse):
         foundUrls.append(resultHTTP.group(0))
     if resultHTTPS:
         foundUrls.append(resultHTTPS.group(0))
+
+
+
 
 def antiVirusDetection(line):
     global antiVirusDetect ,antiVirusDetectLine
@@ -123,4 +131,7 @@ print('\n<--Persistence  Detection-->"')
 for x in schTaskCalls:
     print(x)
 for x in regCalls:
+    print(x)
+print('\n<-------Shell  Calls------>"')
+for x in shellCalls:
     print(x)
