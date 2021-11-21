@@ -53,10 +53,10 @@ def urls(linetoParse):
 
     linetoParse=linetoParse.replace('\'','')
     linetoParse=linetoParse.replace('"','')
-    resultHTTP = getRefRe(linetoParse,"http")
-    resultHTTPS = getRefRe(linetoParse,"https")
+    resultHTTP = getRefRe(linetoParse,"http:")
+    resultHTTPS = getRefRe(linetoParse,"https:")
     
-    if resultHTTP or resultHTTPS:
+    if resultHTTP:
         foundUrls.append(resultHTTP.group(0))
     if resultHTTPS:
         foundUrls.append(resultHTTPS.group(0))
